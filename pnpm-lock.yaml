@@ -15,6 +15,7 @@ importers:
   apps/server:
     specifiers:
       '@types/bcrypt': ^5.0.0
+      '@types/cookie-parser': ^1.4.3
       '@types/cors': ^2.8.13
       '@types/express': ^4.17.15
       '@types/node': ^18.11.18
@@ -22,6 +23,7 @@ importers:
       '@typescript-eslint/parser': ^5.48.2
       bcrypt: ^5.1.0
       concurrently: ^7.6.0
+      cookie-parser: ^1.4.6
       cors: ^2.8.5
       dotenv: ^16.0.3
       eslint: ^8.32.0
@@ -29,6 +31,7 @@ importers:
       eslint-config-airbnb-typescript: ^17.0.0
       eslint-plugin-import: ^2.27.5
       express: ^4.18.2
+      express-validator: ^6.14.3
       jsonwebtoken: ^9.0.0
       mongodb: ^4.13.0
       mongoose: ^6.8.4
@@ -38,14 +41,17 @@ importers:
       typescript: ^4.9.4
     dependencies:
       bcrypt: 5.1.0
+      cookie-parser: 1.4.6
       cors: 2.8.5
       dotenv: 16.0.3
       express: 4.18.2
+      express-validator: 6.14.3
       jsonwebtoken: 9.0.0
       mongodb: 4.13.0
       mongoose: 6.8.4
     devDependencies:
       '@types/bcrypt': 5.0.0
+      '@types/cookie-parser': 1.4.3
       '@types/cors': 2.8.13
       '@types/express': 4.17.15
       '@types/node': 18.11.18
@@ -1025,6 +1031,12 @@ packages:
       '@types/node': 18.11.18
     dev: true
 
+  /@types/cookie-parser/1.4.3:
+    resolution: {integrity: sha512-CqSKwFwefj4PzZ5n/iwad/bow2hTCh0FlNAeWLtQM3JA/NX/iYagIpWG2cf1bQKQ2c9gU2log5VUCrn7LDOs0w==}
+    dependencies:
+      '@types/express': 4.17.15
+    dev: true
+
   /@types/cors/2.8.13:
     resolution: {integrity: sha512-RG8AStHlUiV5ysZQKq97copd2UmVYw3/pRMLefISZ3S1hK104Cwm7iLQ3fTKx+lsUH2CE8FlLaYeEA2LSeqYUA==}
     dependencies:
@@ -1560,8 +1572,21 @@ packages:
     engines: {node: '>= 0.6'}
     dev: false
 
+  /cookie-parser/1.4.6:
+    resolution: {integrity: sha512-z3IzaNjdwUC2olLIB5/ITd0/setiaFMLYiZJle7xg5Fe9KWAceil7xszYfHHBtDFYLSgJduS2Ty0P1uJdPDJeA==}
+    engines: {node: '>= 0.8.0'}
+    dependencies:
+      cookie: 0.4.1
+      cookie-signature: 1.0.6
+    dev: false
+
   /cookie-signature/1.0.6:
     resolution: {integrity: sha1-4wOogrNCzD7oylE6eZmXNNqzriw=}
+    dev: false
+
+  /cookie/0.4.1:
+    resolution: {integrity: sha512-ZwrFkGJxUR3EIoXtO+yVE69Eb7KlixbaeAWfBQB9vVsNn/o+Yw69gBWSSDK825hQNdN+wF8zELf3dFNl/kxkUA==}
+    engines: {node: '>= 0.6'}
     dev: false
 
   /cookie/0.5.0:
@@ -2030,6 +2055,14 @@ packages:
   /etag/1.8.1:
     resolution: {integrity: sha512-aIL5Fx7mawVa300al2BnEE4iNvo1qETxLrPI/o05L7z6go7fCw1J6EQmbK4FmJ2AS7kgVF/KEZWufBfdClMcPg==}
     engines: {node: '>= 0.6'}
+    dev: false
+
+  /express-validator/6.14.3:
+    resolution: {integrity: sha512-c4b9NMdhskfcLbH/FchsSfCt4Vb14gKzcotG9zLS+VoOJDox57aGhCL+kmAu7cl+ytaSed+HD5jdJhel8DQsdg==}
+    engines: {node: '>= 8.0.0'}
+    dependencies:
+      lodash: 4.17.21
+      validator: 13.7.0
     dev: false
 
   /express/4.18.2:
@@ -3684,6 +3717,11 @@ packages:
   /v8-compile-cache-lib/3.0.1:
     resolution: {integrity: sha512-wa7YjyUGfNZngI/vtK0UHAN+lgDCxBPCylVXGp0zu59Fz5aiGtNXaq3DhIov063MorB+VfufLh3JlF2KdTK3xg==}
     dev: true
+
+  /validator/13.7.0:
+    resolution: {integrity: sha512-nYXQLCBkpJ8X6ltALua9dRrZDHVYxjJ1wgskNt1lH9fzGjs3tgojGSCBjmEPwkWS1y29+DrizMTW19Pr9uB2nw==}
+    engines: {node: '>= 0.10'}
+    dev: false
 
   /vary/1.1.2:
     resolution: {integrity: sha512-BNGbWLfd0eUPabhkXUVm0j8uuvREyTh5ovRa/dyow/BqAbZJyC+5fU+IzQOzmAKzYqYRAISoRhdQr3eIZ/PXqg==}
