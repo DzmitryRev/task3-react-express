@@ -16,5 +16,6 @@ router.post('/signout', userController.signout);
 router.get('/users', authMiddleware, userController.getUsers);
 router.put('/users/:id', authMiddleware, userController.toggleBlockUser);
 router.delete('/users/:id', authMiddleware, userController.deleteUser);
+router.get('/refresh', userController.refresh);
 
 export default router;
