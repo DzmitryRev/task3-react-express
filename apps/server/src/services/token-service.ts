@@ -3,16 +3,18 @@ import { IUserDto } from '../dtos/user-dto';
 import tokenModel from '../models/token-model';
 
 class TokenService {
-  static generateTokens(payload: IUserDto) {
-    const accessToken = jwt.sign(payload, process.env.JWT_ACCESS_SECRET, { expiresIn: '30m' });
-    const refreshToken = jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: '30d' });
+  generateTokens(payload: IUserDto) {
+    const accessToken = jwt.sign({ payload }, process.env.JWT_ACCESS_SECRET, { expiresIn: '30m' });
+    const refreshToken = jwt.sign({ payload }, process.env.JWT_REFRESH_SECRET, {
+      expiresIn: '30d',
+    });
     return {
       accessToken,
       refreshToken,
     };
   }
 
-  static validateAccessToken(token: string) {
+  validateAccessToken(token: string) {
     try {
       const userData = jwt.verify(token, process.env.JWT_ACCESS_SECRET);
       return userData;
@@ -21,7 +23,7 @@ class TokenService {
     }
   }
 
-  static validateRefreshToken(token: string) {
+  validateRefreshToken(token: string) {
     try {
       const userData = jwt.verify(token, process.env.JWT_REFRESH_SECRET);
       return userData;
@@ -30,7 +32,7 @@ class TokenService {
     }
   }
 
-  static async saveToken(userId: string, refreshToken: string) {
+  async saveToken(userId: string, refreshToken: string) {
     const tokenData = await tokenModel.findOne({ user: userId });
     if (tokenData) {
       tokenData.refreshToken = refreshToken;
@@ -40,15 +42,15 @@ class TokenService {
     return token;
   }
 
-  static async removeToken(refreshToken: string) {
-    const tokenData = await tokenModel.deleteOne({ refreshToken });
+  async removeToken(refreshToken: string) {
+    const tokenData = await tokenModel.findOneAndDelete({ refreshToken });
     return tokenData;
   }
 
-  static async findToken(refreshToken: string) {
+  async findToken(refreshToken: string) {
     const tokenData = await tokenModel.findOne({ refreshToken });
     return tokenData;
   }
 }
 
-export default TokenService;
+export default new TokenService();
