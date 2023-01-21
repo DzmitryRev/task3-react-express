@@ -13,5 +13,9 @@
   },
   "ignorePatterns": ["*.config.ts"],
   "plugins": ["react"],
-  "rules": {}
+  "rules": {
+    "linebreak-style": "off",
+    "no-underscore-dangle": "off",
+    "no-param-reassign": "off"
+  }
 }
