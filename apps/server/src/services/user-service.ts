@@ -1,22 +1,15 @@
-import bcrypt from 'bcrypt';
 import UserDto from '../dtos/user-dto';
-import UserModel, { IUser } from '../models/user-model';
+import UserModel from '../models/user-model';
 import ApiError from '../utils/api-error-util';
+import hashService from './hash-service';
 import TokenService from './token-service';
 
 class UserService {
   async signup(name: string, email: string, password: string) {
     const newUser = await UserModel.findOne({ email });
-    if (newUser) {
-      throw ApiError.BadRequest('Такой email уже зарегистрирован');
-    }
-    const hashPassword = await bcrypt.hash(password, 5);
-    const user = await UserModel.create({
-      name,
-      email,
-      password: hashPassword,
-      registrationDate: new Date(),
-    });
+    if (newUser) throw ApiError.BadRequest('Такой email уже зарегистрирован');
+    const hashPassword = await hashService.hashPassword(password);
+    const user = await UserModel.create({ name, email, password: hashPassword });
     const userDto = new UserDto({ name: user.name, email: user.email, id: user._id.toString() });
     const tokens = TokenService.generateTokens(userDto);
     await TokenService.saveToken(userDto.id, tokens.refreshToken);
@@ -28,10 +21,7 @@ class UserService {
     if (!user) {
       throw ApiError.BadRequest('Пользователь с таким email не найден');
     }
-    const isPassEquals = await bcrypt.compare(password, user.password);
-    if (!isPassEquals) {
-      throw ApiError.BadRequest('Неверный пароль');
-    }
+    await hashService.compareHash(user.password, password);
     const userDto = new UserDto({ name: user.name, email: user.email, id: user._id.toString() });
     const tokens = TokenService.generateTokens(userDto);
     await TokenService.saveToken(userDto.id, tokens.refreshToken);
@@ -44,7 +34,7 @@ class UserService {
   }
 
   async getAllUsers() {
-    const users = await UserModel.find();
+    const users = await UserModel.find({}, { password: 0 });
     return users;
   }
 
@@ -55,17 +45,17 @@ class UserService {
     }
     await UserModel.deleteOne({ _id: id });
     const userDto = new UserDto({ name: user.name, email: user.email, id: user._id.toString() });
-    return { user: userDto };
+    return userDto;
   }
 
-  async toggleBlockUser(id: string, status: Pick<IUser, 'status'>) {
+  async toggleBlockUser(id: string, status: 'blocked' | 'active') {
     const user = await UserModel.findOne({ _id: id });
     if (!user) {
       throw ApiError.BadRequest('Такого пользователя нет');
     }
     await UserModel.updateOne({ _id: id }, { $set: { status } });
     const userDto = new UserDto({ name: user.name, email: user.email, id: user._id.toString() });
-    return { user: userDto };
+    return userDto;
   }
 
   //   async toggleBlockAllPickedUsers(id: string, status: Pick<IUser, 'status'>) {
@@ -99,4 +89,4 @@ class UserService {
   }
 }
 
-export default UserService;
+export default new UserService();
