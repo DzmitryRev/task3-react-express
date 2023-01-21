@@ -10,12 +10,12 @@ export interface IUser {
 }
 
 const UserSchema = new Schema<IUser>({
-  name: { required: true },
-  email: { unique: true, required: true },
-  password: { required: true },
-  status: { required: true },
-  registrationDate: { required: true },
-  lastVisitDate: { default: null },
+  name: { type: String, required: true },
+  email: { type: String, unique: true, required: true },
+  password: { type: String, required: true },
+  status: { type: String, required: true },
+  registrationDate: { type: Date, required: true },
+  lastVisitDate: { type: Date, default: null },
 });
 
 export default model('User', UserSchema);
