@@ -6,16 +6,16 @@ export interface IUser {
   password: string;
   status: 'blocked' | 'active';
   registrationDate: Date;
-  lastVisitDate: Date;
+  lastVisitDate: Date | null;
 }
 
 const UserSchema = new Schema<IUser>({
-  name: { type: String, required: true },
-  email: { type: String, unique: true, required: true },
-  password: { type: String, required: true },
-  status: { type: String, required: true },
-  registrationDate: { type: Date, required: true },
-  lastVisitDate: { type: Date, required: true },
+  name: { required: true },
+  email: { unique: true, required: true },
+  password: { required: true },
+  status: { required: true },
+  registrationDate: { required: true },
+  lastVisitDate: { default: null },
 });
 
 export default model('User', UserSchema);
