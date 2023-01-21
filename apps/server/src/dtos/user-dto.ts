@@ -1,13 +1,20 @@
 import { IUser } from '../models/user-model';
 
-class UserDto implements Pick<IUser, 'name' | 'email'> {
+export interface IUserDto extends Pick<IUser, 'name' | 'email'> {
+  id: string;
+}
+
+class UserDto implements IUserDto {
   name: string;
+
+  id: string;
 
   email: string;
 
-  constructor(model: IUser) {
+  constructor(model: IUserDto) {
     this.name = model.name;
     this.email = model.email;
+    this.id = model.id;
   }
 }
 
