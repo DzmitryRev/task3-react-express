@@ -14,9 +14,7 @@ app.use(cors());
 
 const start = async () => {
   try {
-    const mongoUrl = process.env.MONGO_DB_URL;
-    if (!mongoUrl) throw new Error("Could't find access link to DB");
-    await mongoose.connect(mongoUrl).catch((error: Error) => {
+    await mongoose.connect(process.env.MONGO_DB_URL).catch((error: Error) => {
       throw new Error(error.message);
     });
     app.listen(PORT, () => {
