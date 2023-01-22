@@ -80,21 +80,21 @@ class UserController {
     }
   }
 
-  async deleteUser(req: IDeleteUserReq, res: IDeleteUserRes, next: NextFunction) {
+  async deleteUsers(req: IDeleteUserReq, res: IDeleteUserRes, next: NextFunction) {
     try {
-      const { id } = req.body;
-      const deletedUser = await userService.deleteUser(id);
+      const ids = req.body;
+      const deletedUser = await userService.deleteUsers(ids);
       return res.json(deletedUser);
     } catch (e) {
       next(e);
     }
   }
 
-  async toggleBlockUser(req: IToggleBlockUserReq, res: IToggleBlockUserRes, next: NextFunction) {
+  async toggleBlockUsers(req: IToggleBlockUserReq, res: IToggleBlockUserRes, next: NextFunction) {
     try {
-      const { id, status } = req.body;
+      const { ids, status } = req.body;
       if (status === 'active' || status === 'blocked') {
-        const updatedUser = await userService.toggleBlockUser(id, status);
+        const updatedUser = await userService.toggleBlockUsers(ids, status);
         return res.json(updatedUser);
       }
       throw ApiError.BadRequest('Wrong status paramert');

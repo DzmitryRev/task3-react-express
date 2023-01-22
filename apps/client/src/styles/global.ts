@@ -6,6 +6,14 @@ const globalStyles = {
     right: 0,
     color: 'red',
   },
+  usersPageContainer: {
+    mb: 3,
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    height: '40px',
+  },
+  usersDataGridContainer: { height: '80vh', width: '100%', mx: 'auto' },
 };
 
 export default globalStyles;

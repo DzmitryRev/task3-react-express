@@ -14,10 +14,10 @@ export type ISigninReq = Request<{}, {}, Pick<IUser, 'email' | 'password'>>;
 
 export type ISigninRes = ISignupRes;
 
-export type IDeleteUserReq = Request<{}, {}, Pick<IUserDto, 'id'>>;
+export type IDeleteUserReq = Request<{}, {}, string[]>;
 
-export type IDeleteUserRes = Response<IUserDto>;
+export type IDeleteUserRes = Response<string[]>;
 
-export type IToggleBlockUserReq = Request<{}, {}, Pick<IUser, 'status'> & Pick<IUserDto, 'id'>>;
+export type IToggleBlockUserReq = Request<{}, {}, { ids: string[], status: 'blocked' | 'active' }>;
 
-export type IToggleBlockUserRes = IDeleteUserRes;
+export type IToggleBlockUserRes = Response<string[]>;

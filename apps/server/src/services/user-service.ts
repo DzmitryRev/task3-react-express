@@ -38,36 +38,15 @@ class UserService {
     return users;
   }
 
-  async deleteUser(id: string) {
-    const user = await UserModel.findOne({ _id: id });
-    if (!user) {
-      throw ApiError.BadRequest('Такого пользователя нет');
-    }
-    await UserModel.deleteOne({ _id: id });
-    const userDto = new UserDto({ name: user.name, email: user.email, id: user._id.toString() });
-    return userDto;
+  async deleteUsers(ids: string[]) {
+    await UserModel.deleteMany({ _id: { $in: ids } });
+    return ids;
   }
 
-  async toggleBlockUser(id: string, status: 'blocked' | 'active') {
-    const user = await UserModel.findOne({ _id: id });
-    if (!user) {
-      throw ApiError.BadRequest('Такого пользователя нет');
-    }
-    await UserModel.updateOne({ _id: id }, { $set: { status } });
-    const userDto = new UserDto({ name: user.name, email: user.email, id: user._id.toString() });
-    return userDto;
+  async toggleBlockUsers(ids: string[], status: 'blocked' | 'active') {
+    await UserModel.updateMany({ _id: { $in: ids } }, { $set: { status } });
+    return ids;
   }
-
-  //   async toggleBlockAllPickedUsers(id: string, status: Pick<IUser, 'status'>) {
-  //     const user = await UserModel.findOne({ _id: id });
-  //     if (!user) {
-  //       throw ApiError.BadRequest('Такого пользователя нет');
-  //     }
-  //     await UserModel.updateAll({ _id: id }, { $set: { status } });
-  //     const userDto = new UserDto({ name: user.name, email:
-  // user.email, id: user._id.toString() });
-  //     return { user: userDto };
-  //   }
 
   async refresh(refreshToken: string) {
     if (!refreshToken) {

@@ -1,39 +1,150 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { Box, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
-import api from '../fetch';
-import { IUser } from '../types/UserTypes';
+import AuthContext from '../context/AuthContext';
+import api, { URL } from '../fetch';
+import { IUser, StatusType } from '../types/UserTypes';
+import AuthService from '../services/AuthService';
+import UsersService from '../services/UsersService';
+import globalStyles from '../styles/global';
 
-interface IUserPageProps {
-  isAuth: boolean;
-}
+const columns: GridColDef[] = [
+  { field: '_id', headerName: 'ID', width: 150 },
+  { field: 'name', headerName: 'Name', width: 130 },
+  { field: 'email', headerName: 'Email', width: 200 },
+  { field: 'registrationDate', headerName: 'Registation Date', width: 170 },
+  {
+    field: 'lastVisitDate',
+    headerName: 'Last visit Date',
+    width: 170,
+  },
+  {
+    field: 'status',
+    headerName: 'Status',
+    width: 100,
+  },
+];
 
-export default function UsersPage({ isAuth }: IUserPageProps) {
-  const [users, setUsers] = useState<IUser[]>([]);
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const [selected];
+export default function UsersPage() {
+  const {
+    isAuth, user, setIsAuth, setUser,
+  } = useContext(AuthContext);
 
   const navigate = useNavigate();
 
-  if (!isAuth) {
-    navigate('/signin');
-  }
+  useEffect(() => {
+    if (!isAuth) {
+      navigate('/signin');
+    }
+  });
+
+  const [users, setUsers] = useState<IUser[]>([]);
+  const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
+
+  const loadUsers = () => {
+    api
+      .get<IUser[]>(`${URL}/users`)
+      .then((res) => {
+        setUsers(res.data);
+        if (user && !res.data.filter((item) => item.email === user?.email).length) {
+          setIsAuth(false);
+          setUser(null);
+        }
+      })
+      .catch(() => {});
+  };
+
+  const deleteUsers = () => {
+    UsersService.deleteUsers(selectedUsers).then(() => {
+      loadUsers();
+    });
+  };
+
+  const toggleBlockUsers = (status: StatusType) => {
+    UsersService.toggleBlockUsers(selectedUsers, status).then(() => {
+      loadUsers();
+    });
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setError(false);
-        setLoading(true);
-        const res = await api.get<IUser[]>(`${URL}/users`);
-        setUsers(res.data);
-        setLoading(false);
-      } catch {
-        setLoading(false);
-        setError(true);
-      }
-    };
-    fetchData();
+    loadUsers();
   }, []);
-  return <div>UsersPage</div>;
+
+  return (
+    <div>
+      <Box sx={globalStyles.usersPageContainer}>
+        {user && user.email}
+        {isAuth && (
+          <Button
+            color="error"
+            variant="contained"
+            type="button"
+            onClick={() => {
+              AuthService.signout().then(() => {
+                localStorage.removeItem('token');
+                setIsAuth(false);
+                setUser(null);
+              });
+            }}
+          >
+            Выход
+          </Button>
+        )}
+      </Box>
+      <Box sx={{ mb: 1 }}>
+        <Button
+          sx={{ mx: 1 }}
+          color="error"
+          variant="contained"
+          type="button"
+          disabled={!selectedUsers.length}
+          onClick={deleteUsers}
+        >
+          удалить
+        </Button>
+
+        <Button
+          sx={{ mx: 1 }}
+          color="error"
+          variant="contained"
+          type="button"
+          disabled={!selectedUsers.length}
+          onClick={() => {
+            toggleBlockUsers('blocked');
+          }}
+        >
+          заблокировать
+        </Button>
+
+        <Button
+          sx={{ mx: 1 }}
+          color="primary"
+          variant="contained"
+          type="button"
+          disabled={!selectedUsers.length}
+          onClick={() => {
+            toggleBlockUsers('active');
+          }}
+        >
+          разблокировать
+        </Button>
+      </Box>
+
+      <Box sx={globalStyles.usersDataGridContainer}>
+        <DataGrid
+          sx={{ mx: 'auto' }}
+          getRowId={(row) => row._id}
+          rows={users}
+          columns={columns}
+          pageSize={10}
+          rowsPerPageOptions={[10]}
+          checkboxSelection
+          onSelectionModelChange={(ids) => {
+            setSelectedUsers(ids.map((id) => id.toString()));
+          }}
+        />
+      </Box>
+    </div>
+  );
 }

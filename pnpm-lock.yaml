@@ -17,6 +17,7 @@ importers:
       '@emotion/react': ^11.10.5
       '@emotion/styled': ^11.10.5
       '@mui/material': ^5.11.5
+      '@mui/x-data-grid': ^5.17.20
       '@types/react': ^18.0.26
       '@types/react-dom': ^18.0.9
       '@typescript-eslint/eslint-plugin': ^5.48.2
@@ -40,6 +41,7 @@ importers:
       '@emotion/react': 11.10.5_3stiutgnnbnfnf3uowm5cip22i
       '@emotion/styled': 11.10.5_jrh5enlbqfbnumycmktdqgd6se
       '@mui/material': 5.11.5_rqh7qj4464ntrqrt6banhaqg4q
+      '@mui/x-data-grid': 5.17.20_25tvrsjy5eslpcibijyorpeyna
       axios: 1.2.3
       formik: 2.2.9_react@18.2.0
       mobx: 6.7.0
@@ -1761,6 +1763,25 @@ packages:
       prop-types: 15.8.1
       react: 18.2.0
       react-is: 18.2.0
+    dev: false
+
+  /@mui/x-data-grid/5.17.20_25tvrsjy5eslpcibijyorpeyna:
+    resolution: {integrity: sha512-khOe5l2deUBxUCkY9qKzevjIcg0l2rab2GjVwRfpJ/FUlV9cEsTvA9fSv4ylo6BsPfENBH6GPjZwxkr5GsXYgw==}
+    engines: {node: '>=12.0.0'}
+    peerDependencies:
+      '@mui/material': ^5.4.1
+      '@mui/system': ^5.4.1
+      react: ^17.0.2 || ^18.0.0
+      react-dom: ^17.0.2 || ^18.0.0
+    dependencies:
+      '@babel/runtime': 7.20.13
+      '@mui/material': 5.11.5_rqh7qj4464ntrqrt6banhaqg4q
+      '@mui/utils': 5.11.2_react@18.2.0
+      clsx: 1.2.1
+      prop-types: 15.8.1
+      react: 18.2.0
+      react-dom: 18.2.0_react@18.2.0
+      reselect: 4.1.7
     dev: false
 
   /@nodelib/fs.scandir/2.1.5:
@@ -4430,6 +4451,10 @@ packages:
     resolution: {integrity: sha512-fGxEI7+wsG9xrvdjsrlmL22OMTTiHRwAMroiEeMgq8gzoLC/PQr7RsRDSTLUg/bZAZtF+TVIkHc6/4RIKrui+Q==}
     engines: {node: '>=0.10.0'}
     dev: true
+
+  /reselect/4.1.7:
+    resolution: {integrity: sha512-Zu1xbUt3/OPwsXL46hvOOoQrap2azE7ZQbokq61BQfiXvhewsKDwhMeZjTX9sX0nvw1t/U5Audyn1I9P/m9z0A==}
+    dev: false
 
   /resolve-from/4.0.0:
     resolution: {integrity: sha512-pb/MYmXstAkysRFx8piNI1tGFNQIFA3vkE3Gq4EuA1dF6gHp/+vgZqsCGJapvy8N3Q+4o7FwvquPJcnZ7RYy4g==}

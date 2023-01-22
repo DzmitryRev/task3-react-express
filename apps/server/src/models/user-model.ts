@@ -5,7 +5,7 @@ export interface IUser {
   email: string;
   password: string;
   status: 'blocked' | 'active';
-  registrationDate: Date;
+  registrationDate: String;
   lastVisitDate: Date | null;
 }
 
@@ -14,7 +14,7 @@ const UserSchema = new Schema<IUser>({
   email: { type: String, unique: true, required: true },
   password: { type: String, required: true },
   status: { type: String, required: true, default: 'active' },
-  registrationDate: { type: Date, required: true, default: new Date() },
+  registrationDate: { type: String, required: true, default: new Date().toLocaleString('en-US') },
   lastVisitDate: { type: Date, default: null },
 });
 

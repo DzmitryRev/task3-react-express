@@ -1,4 +1,5 @@
-import api from '../fetch';
+import axios from 'axios';
+import api, { URL } from '../fetch';
 import { IAuthRes } from '../types/AuthResTypes';
 
 class AuthService {
@@ -12,6 +13,10 @@ class AuthService {
 
   static signout() {
     return api.post('/signout');
+  }
+
+  static refresh() {
+    return axios.get<IAuthRes>(`${URL}/refresh`, { withCredentials: true });
   }
 }
 

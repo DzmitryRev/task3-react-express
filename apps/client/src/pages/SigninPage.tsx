@@ -1,35 +1,25 @@
-import React, { useContext, useEffect } from 'react';
-import { Box, Button, TextField } from '@mui/material';
+import React, { useContext } from 'react';
+import { Box, Button } from '@mui/material';
 import { useFormik } from 'formik';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { signInValidationSchema as validationSchema } from '../yup/Schemas';
-import useRequestFlags from '../hooks/useRequestFlags';
 import AuthContext from '../context/AuthContext';
 import AuthService from '../services/AuthService';
 import globalStyles from '../styles/global';
-
-const formikInitialValue = {
-  email: '',
-  password: '',
-};
+import useRedirect from '../hooks/useRedirect';
+import { signInInitialvalue } from '../formik/initialValues';
+import TextFieldCustom from '../components/TextFieldCustom';
 
 export default function SigninPage() {
   const { isAuth, setIsAuth, setUser } = useContext(AuthContext);
-  const navigate = useNavigate();
-  useEffect(() => {
-    if (isAuth) {
-      navigate('/');
-    }
-  }, [isAuth]);
 
-  const { error, setError } = useRequestFlags();
+  useRedirect(isAuth, '/');
 
   const formik = useFormik({
-    initialValues: formikInitialValue,
+    initialValues: signInInitialvalue,
     validationSchema,
     onSubmit: (values) => {
       const { email, password } = values;
-      setError('');
       AuthService.signin(email, password)
         .then((res) => {
           localStorage.setItem('token', res.data.accessToken);
@@ -37,7 +27,8 @@ export default function SigninPage() {
           setIsAuth(true);
         })
         .catch((e) => {
-          setError(e.response.data.message);
+          console.log(e.response.data.message);
+          // error handling
         });
     },
   });
@@ -45,39 +36,31 @@ export default function SigninPage() {
   return (
     <Box sx={globalStyles.auth}>
       <Box sx={globalStyles.authInnerContainer}>
-        <Box sx={globalStyles.authError}>{error}</Box>
         <Box sx={{ mb: 4 }}>
           <Link to="/signup">Регистрация</Link>
         </Box>
         <form onSubmit={formik.handleSubmit}>
-          <TextField
-            sx={{ mb: 2 }}
-            fullWidth
-            id="outlined-error"
+          <TextFieldCustom
             name="email"
             label={formik.touched.email ? formik.touched.email && formik.errors.email : 'Email'}
             value={formik.values.email}
-            onChange={formik.handleChange}
             error={formik.touched.email && Boolean(formik.errors.email)}
-            autoComplete="off"
+            onChange={formik.handleChange}
           />
-          <TextField
-            sx={{ mb: 2 }}
-            fullWidth
-            id="outlined-error"
+          <TextFieldCustom
             name="password"
             label={
               formik.touched.password
                 ? formik.touched.password && formik.errors.password
                 : 'Password'
             }
+            type="password"
             value={formik.values.password}
-            onChange={formik.handleChange}
             error={formik.touched.password && Boolean(formik.errors.password)}
-            autoComplete="off"
+            onChange={formik.handleChange}
           />
           <Button color="primary" variant="contained" fullWidth type="submit">
-            Submit
+            Вход
           </Button>
         </form>
       </Box>
