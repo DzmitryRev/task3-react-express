@@ -5,8 +5,8 @@ export interface IUser {
   email: string;
   password: string;
   status: 'blocked' | 'active';
-  registrationDate: String;
-  lastVisitDate: Date | null;
+  registrationDate: string;
+  lastVisitDate: string | null;
 }
 
 const UserSchema = new Schema<IUser>({
@@ -15,7 +15,7 @@ const UserSchema = new Schema<IUser>({
   password: { type: String, required: true },
   status: { type: String, required: true, default: 'active' },
   registrationDate: { type: String, required: true, default: new Date().toLocaleString('en-US') },
-  lastVisitDate: { type: Date, default: null },
+  lastVisitDate: { type: String, default: null },
 });
 
 export default model('User', UserSchema);
