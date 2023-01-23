@@ -15,7 +15,7 @@ const UserSchema = new Schema<IUser>({
   password: { type: String, required: true },
   status: { type: String, required: true, default: 'active' },
   registrationDate: { type: String, required: true, default: new Date().toLocaleString('en-US') },
-  lastVisitDate: { type: String, default: null },
+  lastVisitDate: { type: String, default: new Date().toLocaleString('en-US') },
 });
 
 export default model('User', UserSchema);

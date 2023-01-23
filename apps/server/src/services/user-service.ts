@@ -24,7 +24,10 @@ class UserService {
     if (user.status === 'blocked') {
       throw ApiError.BadRequest('Пользователь заблокирован');
     }
-    user.lastVisitDate = new Date().toLocaleString();
+    await UserModel.updateOne(
+      { email },
+      { $set: { lastVisitDate: new Date().toLocaleString('en-US') } },
+    );
     await hashService.compareHash(user.password, password);
     const userDto = new UserDto({ name: user.name, email: user.email, id: user._id.toString() });
     const tokens = TokenService.generateTokens(userDto);
