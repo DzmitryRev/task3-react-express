@@ -1,13 +1,13 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { Box, Button } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/AuthContext';
 import api, { URL } from '../fetch';
 import { IUser, StatusType } from '../types/UserTypes';
 import AuthService from '../services/AuthService';
 import UsersService from '../services/UsersService';
 import globalStyles from '../styles/global';
+import useRedirect from '../hooks/useRedirect';
 
 const columns: GridColDef[] = [
   { field: '_id', headerName: 'ID', width: 150 },
@@ -31,13 +31,7 @@ export default function UsersPage() {
     isAuth, user, setIsAuth, setUser,
   } = useContext(AuthContext);
 
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (!isAuth) {
-      navigate('/signin');
-    }
-  });
+  useRedirect(!isAuth, '/signin');
 
   const [users, setUsers] = useState<IUser[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<string[]>([]);
@@ -47,7 +41,8 @@ export default function UsersPage() {
       .get<IUser[]>(`${URL}/users`)
       .then((res) => {
         setUsers(res.data);
-        if (user && !res.data.filter((item) => item.email === user?.email).length) {
+        const currentUser = res.data.find((item) => item.email === user?.email);
+        if (user && (!currentUser || currentUser.status === 'blocked')) {
           setIsAuth(false);
           setUser(null);
         }

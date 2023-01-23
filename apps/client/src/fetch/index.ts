@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { IAuthRes } from '../types/AuthResTypes';
 
-export const URL = 'http://localhost:3002/api';
+export const URL = 'https://deploy-2.onrender.com/api';
 
 const api = axios.create({
   withCredentials: true,

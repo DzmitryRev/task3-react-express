@@ -9,17 +9,21 @@ import globalStyles from '../styles/global';
 import useRedirect from '../hooks/useRedirect';
 import { signInInitialvalue } from '../formik/initialValues';
 import TextFieldCustom from '../components/TextFieldCustom';
+import useError from '../hooks/useError';
 
 export default function SigninPage() {
   const { isAuth, setIsAuth, setUser } = useContext(AuthContext);
 
   useRedirect(isAuth, '/');
 
+  const { error, setError } = useError();
+
   const formik = useFormik({
     initialValues: signInInitialvalue,
     validationSchema,
     onSubmit: (values) => {
       const { email, password } = values;
+      setError('');
       AuthService.signin(email, password)
         .then((res) => {
           localStorage.setItem('token', res.data.accessToken);
@@ -27,8 +31,7 @@ export default function SigninPage() {
           setIsAuth(true);
         })
         .catch((e) => {
-          console.log(e.response.data.message);
-          // error handling
+          setError(e.response.data.message);
         });
     },
   });
@@ -36,8 +39,9 @@ export default function SigninPage() {
   return (
     <Box sx={globalStyles.auth}>
       <Box sx={globalStyles.authInnerContainer}>
-        <Box sx={{ mb: 4 }}>
+        <Box sx={{ mb: 4, display: 'flex', justifyContent: 'space-between' }}>
           <Link to="/signup">Регистрация</Link>
+          <Box sx={{ color: 'red' }}>{error}</Box>
         </Box>
         <form onSubmit={formik.handleSubmit}>
           <TextFieldCustom

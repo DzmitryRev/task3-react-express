@@ -1,17 +1,16 @@
-import React, { useEffect, useMemo, useState } from 'react';
-import { Route, Routes, useNavigate } from 'react-router-dom';
+import React, { useMemo, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import AuthContext from './context/AuthContext';
 // import useAuth from './hooks/useAuth';
 import SigninPage from './pages/SigninPage';
 import SignupPage from './pages/SignupPage';
 import UsersPage from './pages/UsersPage';
-import AuthService from './services/AuthService';
 import { IUser } from './types/UserTypes';
 
 function App() {
   const [isAuth, setIsAuth] = useState(false);
   const [user, setUser] = useState<IUser | null>(null);
-  const navigate = useNavigate();
+
   const authContextProviderValue = useMemo(
     () => ({
       isAuth,
@@ -21,23 +20,6 @@ function App() {
     }),
     [isAuth, setIsAuth, user, setUser],
   );
-
-  useEffect(() => {
-    if (localStorage.getItem('token')) {
-      AuthService.refresh()
-        .then((res) => {
-          localStorage.setItem('token', res.data.accessToken);
-          setIsAuth(true);
-          setUser(res.data.user);
-          navigate('/');
-        })
-        .catch((e) => {
-          console.log(e.response?.data?.message);
-        });
-    }
-  }, []);
-
-  console.log(isAuth);
 
   return (
     <div className="App">
